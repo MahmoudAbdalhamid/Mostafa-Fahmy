@@ -1,4 +1,4 @@
-﻿
+
 const PHONE_NUMBER = "201065600556"; 
 
 
@@ -290,12 +290,7 @@ function initEventListeners() {
         elements.projectVideo.closest('.video-wrapper').classList.remove('playing');
     });
 
-    // محاولة autoplay للفيديو
-    setTimeout(() => {
-        elements.projectVideo.play().catch(() => {
-            // Autoplay منع - لا مشكلة، سيشغله المستخدم
-        });
-    }, 1000);
+    // ملاحظة: تم إلغاء التشغيل التلقائي — الفيديو يعمل فقط عند الضغط على الزر
 }
 
 
