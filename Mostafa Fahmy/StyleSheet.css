@@ -459,6 +459,133 @@ img {
     pointer-events: none;
 }
 
+/* شريط التحكم (تقديم/تأخير) */
+.video-controls {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 12;
+    direction: ltr;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 22px 12px 12px;
+    line-height: 1;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.65) 0%, rgba(0, 0, 0, 0.25) 60%, transparent 100%);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+}
+
+.video-wrapper:hover .video-controls,
+.video-wrapper.playing .video-controls {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.vc-btn {
+    flex-shrink: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    color: var(--white);
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .vc-btn:hover {
+        background: var(--accent-orange);
+        transform: scale(1.08);
+    }
+
+.vc-time {
+    flex-shrink: 0;
+    color: var(--white);
+    font-size: 12px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+    min-width: 34px;
+    text-align: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* شريط التقديم/التأخير */
+.vc-seek {
+    -webkit-appearance: none;
+    appearance: none;
+    flex: 1 1 auto;
+    height: 6px;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.3);
+    background-image: linear-gradient(var(--accent-orange), var(--accent-orange));
+    background-size: var(--seek-progress, 0%) 100%;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    outline: none;
+}
+
+.vc-seek::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--accent-orange);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+
+.vc-seek:hover::-webkit-slider-thumb {
+    transform: scale(1.2);
+}
+
+.vc-seek::-moz-range-thumb {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--white);
+    border: 3px solid var(--accent-orange);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}
+
+.vc-seek::-moz-range-track {
+    background: transparent;
+}
+
+/* تبديل أيقونات تشغيل/إيقاف وكتم الصوت حسب الحالة */
+.vc-icon-pause,
+.vc-icon-muted {
+    display: none;
+}
+
+.video-wrapper.playing .vc-icon-play {
+    display: none;
+}
+
+.video-wrapper.playing .vc-icon-pause {
+    display: block;
+}
+
+.video-controls.muted .vc-icon-volume {
+    display: none;
+}
+
+.video-controls.muted .vc-icon-muted {
+    display: block;
+}
+
 /* ═══════════════════════════════════════════════════════════════════
    Footer
    ═══════════════════════════════════════════════════════════════════ */
