@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════════════════════════════════
+/* ═══════════════════════════════════════════════════════════════════
    Reset & Base Styles
    ═══════════════════════════════════════════════════════════════════ */
 * {
@@ -10,6 +10,7 @@
 :root {
     --dark-navy: #0f1724;
     --accent-orange: #e86a3a;
+    --accent-green: #22c55e;
     --light-bg: #f7f9fb;
     --white: #ffffff;
     --dark-text: #111827;
@@ -329,7 +330,7 @@ img {
     color: var(--dark-text);
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
     transition: var(--transition-smooth);
-    border: 3px solid transparent;
+    border: 3px solid var(--accent-green);
 }
 
 [dir="rtl"] .drive-link {
@@ -404,27 +405,37 @@ img {
 
 .video-wrapper {
     position: relative;
-    max-width: 900px;
+    width: fit-content;        /* الإطار يلف حوالين الفيديو بالظبط */
+    max-width: 100%;
     margin: 40px auto 0;
     border-radius: 16px;
     overflow: hidden;
     box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    background: #000;
+    line-height: 0;
 }
 
     .video-wrapper video {
-        width: 100%;
         display: block;
+        width: auto;
+        height: auto;
+        max-width: 100%;       /* ميعدّيش عرض الشاشة */
+        max-height: 80vh;      /* ميعدّيش ارتفاع الشاشة (للفيديو الطولي) */
     }
 
 .video-error {
-    width: 100%;
-    aspect-ratio: 16/9;
+    width: 320px;
+    max-width: 100%;
+    aspect-ratio: 464 / 826;
     background: #e5e7eb;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #6b7280;
     font-size: 18px;
+    text-align: center;
+    padding: 20px;
+    line-height: 1.6;
 }
 
 .video-play-btn {
