@@ -65,7 +65,13 @@ const elements = {
     btnGallery: document.getElementById('btnGallery'),
     btnVideo: document.getElementById('btnVideo'),
     videoPlayBtn: document.getElementById('videoPlayBtn'),
-    projectVideo: document.getElementById('projectVideo')
+    projectVideo: document.getElementById('projectVideo'),
+    videoControls: document.getElementById('videoControls'),
+    vcPlayPause: document.getElementById('vcPlayPause'),
+    vcSeek: document.getElementById('vcSeek'),
+    vcCurrent: document.getElementById('vcCurrent'),
+    vcDuration: document.getElementById('vcDuration'),
+    vcMute: document.getElementById('vcMute')
 };
 
 
@@ -252,6 +258,75 @@ function playVideo() {
     }
 }
 
+// ── شريط التقديم/التأخير + الوقت + كتم الصوت ──
+let isSeeking = false;
+
+function formatTime(seconds) {
+    if (!isFinite(seconds) || seconds < 0) seconds = 0;
+    const m = Math.floor(seconds / 60);
+    const s = Math.floor(seconds % 60);
+    return m + ':' + (s < 10 ? '0' : '') + s;
+}
+
+function updateSeekBar() {
+    const v = elements.projectVideo;
+    const pct = v.duration ? (v.currentTime / v.duration) * 100 : 0;
+    if (!isSeeking) {
+        elements.vcSeek.value = pct;
+    }
+    elements.vcSeek.style.setProperty('--seek-progress', pct + '%');
+    elements.vcCurrent.textContent = formatTime(v.currentTime);
+}
+
+function updateMuteUI() {
+    const v = elements.projectVideo;
+    elements.videoControls.classList.toggle('muted', v.muted || v.volume === 0);
+}
+
+function initVideoControls() {
+    const v = elements.projectVideo;
+
+    // زر تشغيل/إيقاف داخل الشريط
+    elements.vcPlayPause.addEventListener('click', (e) => {
+        e.stopPropagation();
+        playVideo();
+    });
+
+    // زر كتم/تشغيل الصوت
+    elements.vcMute.addEventListener('click', (e) => {
+        e.stopPropagation();
+        v.muted = !v.muted;
+        updateMuteUI();
+    });
+
+    // شريط التقديم/التأخير
+    elements.vcSeek.addEventListener('input', () => {
+        isSeeking = true;
+        const t = (elements.vcSeek.value / 100) * (v.duration || 0);
+        v.currentTime = t;
+        elements.vcSeek.style.setProperty('--seek-progress', elements.vcSeek.value + '%');
+        elements.vcCurrent.textContent = formatTime(t);
+    });
+    elements.vcSeek.addEventListener('change', () => { isSeeking = false; });
+
+    // مزامنة الشريط مع حالة الفيديو
+    v.addEventListener('timeupdate', updateSeekBar);
+    v.addEventListener('loadedmetadata', () => {
+        elements.vcDuration.textContent = formatTime(v.duration);
+        updateSeekBar();
+    });
+    v.addEventListener('play', () => v.closest('.video-wrapper').classList.add('playing'));
+    v.addEventListener('pause', () => v.closest('.video-wrapper').classList.remove('playing'));
+    v.addEventListener('volumechange', updateMuteUI);
+
+    // في حال كانت بيانات الفيديو محمّلة قبل تفعيل المستمعات
+    if (v.readyState >= 1) {
+        elements.vcDuration.textContent = formatTime(v.duration);
+        updateSeekBar();
+    }
+    updateMuteUI();
+}
+
 function scrollToGallery() {
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
 }
@@ -289,6 +364,9 @@ function initEventListeners() {
     elements.projectVideo.addEventListener('ended', () => {
         elements.projectVideo.closest('.video-wrapper').classList.remove('playing');
     });
+
+    // شريط التقديم/التأخير
+    initVideoControls();
 
     // ملاحظة: تم إلغاء التشغيل التلقائي — الفيديو يعمل فقط عند الضغط على الزر
 }
